@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template name="DbReportInsertDatabase" xmlns="http://ws.apache.org/ns/synapse">
+    <parameter name="message_id"/>
+    <parameter name="relates_to"/>
+    <parameter name="reply_to"/>
+    <parameter name="fault_to"/>
+    <parameter name="stage"/>
+    <sequence>
+        <dbreport>
+            <connection>
+                <pool>
+                    <dsName>Heroku</dsName>
+                </pool>
+            </connection>
+            <statement>
+                <sql><![CDATA[INSERT INTO smart_proxy.smart_proxy(message_id, relates_to, reply_to, fault_to, stage) VALUES ( ?, ?, ?, ?, ?)]]></sql>
+                <parameter expression="$func:message_id" type="CHAR"/>
+                <parameter expression="$func:relates_to" type="CHAR"/>
+                <parameter expression="$func:reply_to" type="CHAR"/>
+                <parameter expression="$func:fault_to" type="CHAR"/>
+                <parameter expression="$func:stage" type="CHAR"/>
+            </statement>
+        </dbreport>
+    </sequence>
+</template>

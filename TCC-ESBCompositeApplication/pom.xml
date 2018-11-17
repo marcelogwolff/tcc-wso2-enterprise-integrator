@@ -10,11 +10,11 @@
   <description>TCC-ESBCompositeApplication</description>
   <properties>
     <com.example.TCC-ESB.message-store_._EnviaPessoa>capp/EnterpriseServiceBus</com.example.TCC-ESB.message-store_._EnviaPessoa>
+    <com.example.TCC-ESB.template_._DbReportInsertDatabase>capp/EnterpriseServiceBus</com.example.TCC-ESB.template_._DbReportInsertDatabase>
     <com.example.TCC-ESB.proxy-service_._PessoaService>capp/EnterpriseServiceBus</com.example.TCC-ESB.proxy-service_._PessoaService>
     <com.example.TCC-ESBRegistry.resource_._PessoaFisicaTransform>capp/EnterpriseIntegrator</com.example.TCC-ESBRegistry.resource_._PessoaFisicaTransform>
     <artifact.types>jaggery/app=zip,synapse/priority-executor=xml,synapse/inbound-endpoint=xml,service/rule=aar,synapse/message-store=xml,event/stream=json,service/meta=xml,datasource/datasource=xml,synapse/proxy-service=xml,bpel/workflow=zip,synapse/sequence=xml,synapse/endpointTemplate=xml,carbon/application=car,wso2/gadget=dar,synapse/api=xml,synapse/event-source=xml,synapse/message-processors=xml,event/receiver=xml,lib/dataservice/validator=jar,synapse/template=xml,synapse/endpoint=xml,lib/carbon/ui=jar,lib/synapse/mediator=jar,event/publisher=xml,synapse/local-entry=xml,synapse/task=xml,webapp/jaxws=war,registry/resource=zip,synapse/configuration=xml,service/axis2=aar,synapse/lib=zip,synapse/sequenceTemplate=xml,event/execution-plan=siddhiql,service/dataservice=dbs,web/application=war,lib/library/bundle=jar</artifact.types>
     <com.example.TCC-ESB.sequence_._PessoaServiceEnvioSequence>capp/EnterpriseServiceBus</com.example.TCC-ESB.sequence_._PessoaServiceEnvioSequence>
-    
     <com.example.TCC-ESB.message-processors_._EnviaPessoaMessageProcessor>capp/EnterpriseServiceBus</com.example.TCC-ESB.message-processors_._EnviaPessoaMessageProcessor>
     <com.example.TCC-ESB.sequence_._RetornoPessoaSequence>capp/EnterpriseServiceBus</com.example.TCC-ESB.sequence_._RetornoPessoaSequence>
     <com.example.TCC-ESB.message-processors_._RecebeRetornoPessoaMessageProcessor>capp/EnterpriseServiceBus</com.example.TCC-ESB.message-processors_._RecebeRetornoPessoaMessageProcessor>
@@ -50,6 +50,12 @@
       <type>xml</type>
     </dependency>
     <dependency>
+      <groupId>com.example.TCC-ESB.template</groupId>
+      <artifactId>DbReportInsertDatabase</artifactId>
+      <version>1.0.0</version>
+      <type>xml</type>
+    </dependency>
+    <dependency>
       <groupId>com.example.TCC-ESBRegistry.resource</groupId>
       <artifactId>endpointCallback_properties</artifactId>
       <version>1.0.0</version>
@@ -79,7 +85,7 @@
       <version>1.0.0</version>
       <type>zip</type>
     </dependency>
-        <dependency>
+    <dependency>
       <groupId>com.example.TCC-ESB.proxy-service</groupId>
       <artifactId>PessoaServiceCallBack</artifactId>
       <version>1.0.0</version>

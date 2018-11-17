@@ -26,4 +26,7 @@
     <artifact name="RetornoPessoaSequence" groupId="com.example.TCC-ESB.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
         <file>src/main/synapse-config/sequences/RetornoPessoaSequence.xml</file>
     </artifact>
+    <artifact name="DbReportInsertDatabase" groupId="com.example.TCC-ESB.template" version="1.0.0" type="synapse/sequenceTemplate" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/templates/DbReportInsertDatabase.xml</file>
+    </artifact>
 </artifacts>

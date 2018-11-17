@@ -17,21 +17,13 @@
                 <with-param name="fault_to" value="-"/>
                 <with-param name="payload" value="{$body}"/>
             </call-template>
-            <dbreport>
-                <connection>
-                    <pool>
-                        <dsName>Heroku</dsName>
-                    </pool>
-                </connection>
-                <statement>
-                    <sql><![CDATA[INSERT INTO smart_proxy.smart_proxy(message_id, relates_to, reply_to, fault_to, stage) VALUES ( ?, ?, ?, ?, ?)]]></sql>
-                    <parameter expression="get-property('MessageIdRetornado')" type="CHAR"/>
-                    <parameter expression="get-property('RelatesToRetornado')" type="CHAR"/>
-                    <parameter type="CHAR" value="-"/>
-                    <parameter type="CHAR" value="-"/>
-                    <parameter type="CHAR" value="RecivedInCallBack"/>
-                </statement>
-            </dbreport>
+            <call-template description="" target="DbReportInsertDatabase">
+                <with-param name="message_id" value="{get-property('MessageIdRetornado')}"/>
+                <with-param name="relates_to" value="{get-property('RelatesToRetornado')}"/>
+                <with-param name="reply_to" value="-"/>
+                <with-param name="fault_to" value="-"/>
+                <with-param name="stage" value="RecivedInCallBack"/>
+            </call-template>
             <store description="" messageStore="RecebeRetornoPessoa"/>
         </inSequence>
         <outSequence/>
