@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="PessoaService" groupId="com.example.TCC-ESB.proxy-service" version="1.0.0" type="synapse/proxy-service" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/proxy-services/PessoaService.xml</file>
+    </artifact>
+    <artifact name="PessoaServiceCallBack" groupId="com.example.TCC-ESB.proxy-service" version="1.0.0" type="synapse/proxy-service" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/proxy-services/PessoaServiceCallBack.xml</file>
+    </artifact>
+    <artifact name="LogsConsole" groupId="com.example.TCC-ESB.template" version="1.0.0" type="synapse/sequenceTemplate" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/templates/LogsConsole.xml</file>
+    </artifact>
+    <artifact name="EnviaPessoa" groupId="com.example.TCC-ESB.message-store" version="1.0.0" type="synapse/message-store" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-stores/EnviaPessoa.xml</file>
+    </artifact>
+    <artifact name="PessoaServiceEnvioSequence" groupId="com.example.TCC-ESB.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/PessoaServiceEnvioSequence.xml</file>
+    </artifact>
+    <artifact name="EnviaPessoaMessageProcessor" groupId="com.example.TCC-ESB.message-processors" version="1.0.0" type="synapse/message-processors" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-processors/EnviaPessoaMessageProcessor.xml</file>
+    </artifact>
+    <artifact name="RecebeRetornoPessoa" groupId="com.example.TCC-ESB.message-store" version="1.0.0" type="synapse/message-store" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-stores/RecebeRetornoPessoa.xml</file>
+    </artifact>
+    <artifact name="RecebeRetornoPessoaMessageProcessor" groupId="com.example.TCC-ESB.message-processors" version="1.0.0" type="synapse/message-processors" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-processors/RecebeRetornoPessoaMessageProcessor.xml</file>
+    </artifact>
+    <artifact name="RetornoPessoaSequence" groupId="com.example.TCC-ESB.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/RetornoPessoaSequence.xml</file>
+    </artifact>
+</artifacts>

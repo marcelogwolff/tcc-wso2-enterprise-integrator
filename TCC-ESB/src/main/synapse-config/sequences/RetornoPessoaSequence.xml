@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="RetornoPessoaSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <dblookup>
+        <connection>
+            <pool>
+                <dsName>Heroku</dsName>
+            </pool>
+        </connection>
+        <statement>
+            <sql><![CDATA[SELECT DISTINCT recebido.message_id, recebido.reply_to from smart_proxy.smart_proxy recebido LEFT JOIN smart_proxy.smart_proxy enviado ON enviado.relates_to = recebido.message_id LEFT JOIN smart_proxy.smart_proxy retornado ON retornado.relates_to = enviado.message_id WHERE enviado.message_id = ?]]></sql>
+            <parameter expression="get-property('RelatesToRetornado')" type="CHAR"/>
+            <result column="reply_to" name="uri.var.reply_to"/>
+            <result column="message_id" name="message_id"/>
+        </statement>
+    </dblookup>
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
+                <soapenv:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+                    <wsa:Action>PessoaService/inserirPessoaFisicaNacionalResponse</wsa:Action>
+                    <wsa:MessageID>$3</wsa:MessageID>
+                    <wsa:RelatesTo>$4</wsa:RelatesTo>
+                </soapenv:Header>
+                <soapenv:Body>
+                    <pes:retorno xmlns:pes="http://www.godinhowolff.com.br/PessoaService/">
+                        <pes:status>$1</pes:status>
+                        <pes:mensagem>$2</pes:mensagem>
+                    </pes:retorno>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="//tem:CodigoRetorno" xmlns:tem="http://tempuri.org/"/>
+            <arg evaluator="xml" expression="//tem:Mensagem" xmlns:tem="http://tempuri.org/"/>
+            <arg evaluator="xml" expression="get-property('MessageID')"/>
+            <arg evaluator="xml" expression="get-property('message_id')"/>
+        </args>
+    </payloadFactory>
+    <call-template description="" target="LogsConsole">
+        <with-param name="proxy_name" value="{get-property('PROXY_NAME')}"/>
+        <with-param name="stage" value="ReturnedToSystem"/>
+        <with-param name="message_id" value="{get-property('MessageID')}"/>
+        <with-param name="relates_to" value="{get-property('MessageIdConsumidor')}"/>
+        <with-param name="reply_to" value="-"/>
+        <with-param name="fault_to" value="-"/>
+        <with-param name="payload" value="{$body}"/>
+    </call-template>
+    <dbreport>
+        <connection>
+            <pool>
+                <dsName>Heroku</dsName>
+            </pool>
+        </connection>
+        <statement>
+            <sql><![CDATA[INSERT INTO smart_proxy.smart_proxy(message_id, relates_to, reply_to, fault_to, stage) VALUES ( ?, ?, ?, ?, ?)]]></sql>
+            <parameter expression="get-property('MessageID')" type="CHAR"/>
+            <parameter expression="get-property('message_id')" type="CHAR"/>
+            <parameter type="CHAR" value="-"/>
+            <parameter type="CHAR" value="-"/>
+            <parameter type="CHAR" value="ReturnedToSystem"/>
+        </statement>
+    </dbreport>
+    <!-- Implementacao do retorno comentada para fins de testes. Em um uso real, deve ser utilizada. -->
+    <!-- 	<call blocking="true"> -->
+    <!--         <http method="post" uri-template="{uri.var.reply_to}"> -->
+    <!-- 	        <suspendOnFailure> -->
+    <!-- 	            <errorCodes>-1</errorCodes> -->
+    <!-- 	            <initialDuration>0</initialDuration> -->
+    <!-- 	            <progressionFactor>1.0</progressionFactor> -->
+    <!-- 	            <maximumDuration>0</maximumDuration> -->
+    <!-- 	        </suspendOnFailure> -->
+    <!-- 	        <markForSuspension> -->
+    <!-- 	            <errorCodes>-1</errorCodes> -->
+    <!-- 	        </markForSuspension> -->
+    <!--     	</http> -->
+    <!--     </call> -->
+</sequence>

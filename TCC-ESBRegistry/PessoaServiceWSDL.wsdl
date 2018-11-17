@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+	xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" 
+	xmlns:wsp="http://www.w3.org/ns/ws-policy"
+	xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+	xmlns:tns="http://www.godinhowolff.com.br/PessoaService/" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	name="PessoaService" 
+	targetNamespace="http://www.godinhowolff.com.br/PessoaService/">
+  <wsdl:types>
+	<schema	attributeFormDefault="qualified"
+		elementFormDefault="qualified" 
+		xmlns="http://www.w3.org/2001/XMLSchema" 
+		targetNamespace="http://www.godinhowolff.com.br/PessoaService/"
+		xmlns:tns="http://www.godinhowolff.com.br/PessoaService/">
+		<complexType name="email">
+			<sequence>
+				<element type="string" name="tipo"/>
+				<element type="string" name="endereco" />
+			</sequence>
+		</complexType>
+		<complexType name="Endereco">
+			<sequence>
+				<element type="string" name="cep" />
+				<element type="string" name="caixaPostal" />
+				<element type="string" name="tipo" />
+				<element type="string" name="tipoLogradouro" />
+				<element type="string" name="numero" />
+				<element type="string" name="logradouro" />
+				<element type="string" name="complemento" />
+				<element type="string" name="bairro" />
+				<element type="string" name="cidade" />
+				<element type="string" name="estado" />
+				<element type="string" name="estadoSigla" />
+				<element type="string" name="pais" />
+				<element type="string" name="paisSigla" />
+			</sequence>
+		</complexType>
+		<complexType name="telefone">
+			<sequence>
+				<element name="ddd" type="string" />
+				<element name="telefone" type="string" />
+				<element name="tipo" type="string"/>
+			</sequence>
+		</complexType>
+		<complexType name="enderecos">
+			<sequence>
+				<element name="endereco" type="tns:Endereco" minOccurs="0" maxOccurs="unbounded"/>
+			</sequence>
+		</complexType>
+		<complexType name="emails">
+			<sequence>
+				<element name="email" type="tns:email" minOccurs="0" maxOccurs="unbounded"/>
+			</sequence>
+		</complexType>
+		<complexType name="telefones">
+			<sequence>
+				<element name="telefone" type="tns:telefone" minOccurs="0"	maxOccurs="unbounded" />
+			</sequence>
+		</complexType>
+		<complexType name="pessoa">
+			<sequence>
+				<element type="tns:enderecos" name="enderecos" />
+				<element type="tns:emails" name="emails" />
+				<element type="tns:telefones" name="telefones" />
+			</sequence>
+		</complexType>
+		<element name="pessoa" type="tns:pessoa" />
+		<complexType name="pessoa_fisica">
+			<complexContent>
+				<extension base="tns:pessoa">
+					<sequence>
+						<element type="string" name="nome" />
+						<element type="date" name="dataNascimento"/>
+						<element name="genero" type="string" />
+						<element name="estadoCivil" type="string" />
+						<element name="nomePai" type="string" />
+						<element name="nomeMae" type="string" />
+					</sequence>
+				</extension>
+			</complexContent>
+		</complexType>
+		<element name="pessoa_fisica" type="tns:pessoa_fisica" />
+		<complexType name="pessoa_fisica_nacional">
+			<complexContent>
+				<extension base="tns:pessoa_fisica">
+					<sequence>
+						<element name="cpf" type="string" />
+						<element name="rg" type="string" />
+						<element name="orgaoEmissorRg" type="string" />
+						<element name="paisNascimento" type="string" />
+						<element name="estadoNascimento" type="string" />
+						<element name="municipioNascimento" type="string" />
+					</sequence>
+				</extension>
+			</complexContent>
+		</complexType>
+		<element name="pessoa_fisica_nacional" type="tns:pessoa_fisica_nacional" />
+		<complexType name="Retorno">
+			<sequence>
+				<element name="status" type="string"/>
+				<element name="mensagem" type="string"/>
+			</sequence>
+		</complexType>
+		<element name="retorno" type="tns:Retorno" />
+	</schema>
+  </wsdl:types>
+  <wsdl:message name="inserirPessoaFisicaRequest">
+    <wsdl:part element="tns:pessoa_fisica_nacional" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="inserirPessoaFisicaResponse">
+    <wsdl:part element="tns:retorno" name="parameters"/>
+  </wsdl:message>
+  <wsdl:portType name="PessoaService">
+    <wsdl:operation name="inserirPessoaFisica">
+      <wsdl:input message="tns:inserirPessoaFisicaRequest" wsam:Action="PessoaService/inserirPessoaFisicaNacional"/>
+      <wsdl:output message="tns:inserirPessoaFisicaResponse" wsam:Action="PessoaService/inserirPessoaFisicaNacionalResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="PessoaServiceSOAP" type="tns:PessoaService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="inserirPessoaFisica">
+      <soap:operation soapAction=""/>
+      <wsp:PolicyReference
+				URI="#WSAddressingPessoaServiceSoapBinding_WSAM_Addressing_Policy" />
+			
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="PessoaService">
+    <wsdl:port binding="tns:PessoaServiceSOAP" name="PessoaServiceSOAP">
+      <soap:address location="http://www.example.org/"/>
+    </wsdl:port>
+  </wsdl:service>
+  	<wsp:Policy
+		wsu:Id="WSAddressingPessoaServiceSoapBinding_WSAM_Addressing_Policy">
+		<wsam:Addressing wsp:Optional="true">
+			<wsp:Policy />
+		</wsam:Addressing>
+	</wsp:Policy>
+</wsdl:definitions>

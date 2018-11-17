@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="PessoaServiceEnvioSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <property expression="get-property('registry', 'conf:services/pessoa/endpointCallback.properties')" name="endpointCallback" scope="default" type="STRING"/>
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
+                <soapenv:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+                    <wsa:Action>http://erp.com.br/corporativo/PessoaService/Pessoa/Integrar</wsa:Action>
+                    <wsa:ReplyTo>
+                        <wsa:Address>$1</wsa:Address>
+                    </wsa:ReplyTo>
+                    <wsa:FaultTo>
+                        <wsa:Address>$1</wsa:Address>
+                    </wsa:FaultTo>
+                    <wsa:MessageID>$2</wsa:MessageID>
+                    <wsa:RelatesTo>$3</wsa:RelatesTo>
+                </soapenv:Header>
+                    $4
+            </soapenv:Envelope>
+        </format>
+        <args>
+            <arg evaluator="xml" expression="get-property('endpointCallback')"/>
+            <arg evaluator="xml" expression="get-property('MessageID')"/>
+            <arg evaluator="xml" expression="get-property('MessageIdConsumidor')"/>
+            <arg evaluator="xml" expression="$body"/>
+        </args>
+    </payloadFactory>
+    <call-template description="" target="LogsConsole">
+        <with-param name="proxy_name" value="{get-property('PROXY_NAME')}"/>
+        <with-param name="stage" value="SentToBackEnd"/>
+        <with-param name="message_id" value="{get-property('MessageID')}"/>
+        <with-param name="relates_to" value="{get-property('MessageIdConsumidor')}"/>
+        <with-param name="reply_to" value="{get-property('endpointCallback')}"/>
+        <with-param name="fault_to" value="{get-property('endpointCallback')}"/>
+        <with-param name="payload" value="{$body}"/>
+    </call-template>
+    <dbreport>
+        <connection>
+            <pool>
+                <dsName>Heroku</dsName>
+            </pool>
+        </connection>
+        <statement>
+            <sql><![CDATA[INSERT INTO smart_proxy.smart_proxy(message_id, relates_to, reply_to, fault_to, stage) VALUES ( ?, ?, ?, ?, ?)]]></sql>
+            <parameter expression="get-property('MessageID')" type="CHAR"/>
+            <parameter expression="get-property('MessageIdConsumidor')" type="CHAR"/>
+            <parameter expression="get-property('endpointCallback')" type="CHAR"/>
+            <parameter expression="get-property('endpointCallback')" type="CHAR"/>
+            <parameter type="CHAR" value="SentToBackEnd"/>
+        </statement>
+    </dbreport>
+    <property name="retorno" scope="default" type="STRING" value="value"/>
+    <header name="Action" scope="default" value="http://erp.com.br/corporativo/PessoaService/Pessoa/Integrar"/>
+    <call>
+        <endpoint>
+            <address uri="http://localhost:8080/tcc-webservices-0.0.1-SNAPSHOT/Pessoa"/>
+        </endpoint>
+    </call>
+</sequence>

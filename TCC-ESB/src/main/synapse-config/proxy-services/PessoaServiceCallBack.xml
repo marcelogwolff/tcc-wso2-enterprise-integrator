@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="PessoaServiceCallBack" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <inSequence>
+            <property name="PRESERVE_WS_ADDRESSING" scope="default" type="STRING" value="true"/>
+            <property expression="//wsa:MessageID" name="MessageIdRetornado" scope="default" type="STRING" xmlns:wsa="http://www.w3.org/2005/08/addressing"/>
+            <property expression="//wsa:RelatesTo" name="RelatesToRetornado" scope="default" type="STRING" xmlns:wsa="http://www.w3.org/2005/08/addressing"/>
+            <property name="PROXY_NAME" scope="default" type="STRING" value="PessoaServiceCallBack"/>
+            <property name="SERVICE_VERSION" scope="default" type="STRING" value="1.0"/>
+            <property name="FORCE_SC_ACCEPTED" scope="axis2" type="STRING" value="true"/>
+            <call-template description="" target="LogsConsole">
+                <with-param name="proxy_name" value="{get-property('PROXY_NAME')}"/>
+                <with-param name="stage" value="RecivedInCallBack"/>
+                <with-param name="message_id" value="{get-property('MessageIdRetornado')}"/>
+                <with-param name="relates_to" value="{get-property('RelatesToRetornado')}"/>
+                <with-param name="reply_to" value="-"/>
+                <with-param name="fault_to" value="-"/>
+                <with-param name="payload" value="{$body}"/>
+            </call-template>
+            <dbreport>
+                <connection>
+                    <pool>
+                        <dsName>Heroku</dsName>
+                    </pool>
+                </connection>
+                <statement>
+                    <sql><![CDATA[INSERT INTO smart_proxy.smart_proxy(message_id, relates_to, reply_to, fault_to, stage) VALUES ( ?, ?, ?, ?, ?)]]></sql>
+                    <parameter expression="get-property('MessageIdRetornado')" type="CHAR"/>
+                    <parameter expression="get-property('RelatesToRetornado')" type="CHAR"/>
+                    <parameter type="CHAR" value="-"/>
+                    <parameter type="CHAR" value="-"/>
+                    <parameter type="CHAR" value="RecivedInCallBack"/>
+                </statement>
+            </dbreport>
+            <store description="" messageStore="RecebeRetornoPessoa"/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </target>
+</proxy>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="PessoaService" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <inSequence>
+            <property name="PRESERVE_WS_ADDRESSING" scope="default" type="STRING" value="true"/>
+            <property expression="//wsa:ReplyTo/wsa:Address" name="ReplyToAddress" scope="default" type="STRING" xmlns:wsa="http://www.w3.org/2005/08/addressing"/>
+            <property expression="//wsa:FaultTo/wsa:Address" name="FaultToAddress" scope="default" type="STRING" xmlns:wsa="http://www.w3.org/2005/08/addressing"/>
+            <property expression="//wsa:MessageID" name="MessageIdConsumidor" scope="default" type="STRING" xmlns:wsa="http://www.w3.org/2005/08/addressing"/>
+            <property name="PROXY_NAME" scope="default" type="STRING" value="PessoaService"/>
+            <property name="SERVICE_VERSION" scope="default" type="STRING" value="1.0"/>
+            <call-template description="" target="LogsConsole">
+                <with-param name="proxy_name" value="{get-property('PROXY_NAME')}"/>
+                <with-param name="stage" value="Received"/>
+                <with-param name="message_id" value="{get-property('MessageIdConsumidor')}"/>
+                <with-param name="relates_to" value="-"/>
+                <with-param name="reply_to" value="{get-property('ReplyToAddress')}"/>
+                <with-param name="fault_to" value="{get-property('FaultToAddress')}"/>
+                <with-param name="payload" value="{$body}"/>
+            </call-template>
+            <dbreport>
+                <connection>
+                    <pool>
+                        <dsName>Heroku</dsName>
+                    </pool>
+                </connection>
+                <statement>
+                    <sql><![CDATA[INSERT INTO smart_proxy.smart_proxy(message_id, relates_to, reply_to, fault_to, stage) VALUES ( ?, ?, ?, ?, ?)]]></sql>
+                    <parameter expression="get-property('MessageIdConsumidor')" type="CHAR"/>
+                    <parameter type="CHAR" value="-"/>
+                    <parameter expression="get-property('ReplyToAddress')" type="CHAR"/>
+                    <parameter expression="get-property('FaultToAddress')" type="CHAR"/>
+                    <parameter type="CHAR" value="Received"/>
+                </statement>
+            </dbreport>
+            <xslt key="conf:services/pessoa/PessoaFisicaTransform.xslt">
+                <property name="AuthenticationTokenId" value="AAAAA"/>
+                <property name="cnpjEmpresa" value="BBBBB"/>
+                <property name="codigoConfiguracao" value="CCCCC"/>
+            </xslt>
+            <store description="" messageStore="EnviaPessoa"/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </target>
+    <publishWSDL key="conf:services/pessoa/PessoaServiceWSDL.wsdl" preservePolicy="true"/>
+    <parameter name="disableOperationValidation">true</parameter>
+    <parameter name="useOriginalwsdl">true</parameter>
+    <parameter name="enforceWSAddressing">true</parameter>
+</proxy>

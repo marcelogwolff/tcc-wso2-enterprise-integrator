@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="PessoaServiceWSDL" groupId="com.example.TCC-ESBRegistry.resource" version="1.0.0" type="registry/resource" serverRole="GovernanceRegistry">
+        <item>
+            <file>PessoaServiceWSDL.wsdl</file>
+            <path>/_system/config/services/pessoa</path>
+            <mediaType>application/wsdl+xml</mediaType>
+        </item>
+    </artifact>
+    <artifact name="PessoaFisicaTransform" groupId="com.example.TCC-ESBRegistry.resource" version="1.0.0" type="registry/resource" serverRole="EnterpriseIntegrator">
+        <item>
+            <file>PessoaFisicaTransform.xslt</file>
+            <path>/_system/config/services/pessoa</path>
+            <mediaType>application/xslt+xml</mediaType>
+        </item>
+    </artifact>
+    <artifact name="endpointCallback_properties" groupId="com.example.TCC-ESBRegistry.resource" version="1.0.0" type="registry/resource" serverRole="EnterpriseIntegrator">
+        <item>
+            <file>endpointCallback.properties</file>
+            <path>/_system/config/services/pessoa</path>
+            <mediaType/>
+        </item>
+    </artifact>
+</artifacts>
