@@ -40,7 +40,7 @@
         <with-param name="proxy_name" value="{get-property('PROXY_NAME')}"/>
         <with-param name="stage" value="ReturnedToSystem"/>
         <with-param name="message_id" value="{get-property('MessageID')}"/>
-        <with-param name="relates_to" value="{get-property('MessageIdConsumidor')}"/>
+        <with-param name="relates_to" value="{get-property('message_id')}"/>
         <with-param name="reply_to" value="-"/>
         <with-param name="fault_to" value="-"/>
         <with-param name="payload" value="{$body}"/>

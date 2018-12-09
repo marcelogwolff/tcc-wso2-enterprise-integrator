@@ -9,13 +9,13 @@
     <parameter name="payload"/>
     <sequence>
         <log level="custom" separator="|">
-            <property expression="$func:proxy_name" name="proxy_name"/>
-            <property expression="$func:stage" name="stage"/>
-            <property expression="$func:message_id" name="message_id"/>
-            <property expression="$func:relates_to" name="relates_to"/>
-            <property expression="$func:reply_to" name="reply_to"/>
-            <property expression="$func:fault_to" name="fault_to"/>
-            <property expression="$func:body" name="body"/>
+            <property expression="$func:proxy_name" name="LogMonitoracao-ProxyName"/>
+            <property expression="$func:stage" name="LogMonitoracao-Stage"/>
+            <property expression="$func:message_id" name="LogMonitoracao-MessageId"/>
+            <property expression="$func:relates_to" name="LogMonitoracao-RelatesTo"/>
+            <property expression="$func:reply_to" name="LogMonitoracao-ReplToAddress"/>
+            <property expression="$func:fault_to" name="LogMonitoracao-FaultToAddress"/>
+            <property expression="$func:body" name="LogMonitoracao-BodyMessage"/>
         </log>
     </sequence>
 </template>
